@@ -1,4 +1,4 @@
-# Predicting-cancer-type
+# Cancer Type Prediction Model
 2020 Data Science Online Internship
 
 ## Installation
