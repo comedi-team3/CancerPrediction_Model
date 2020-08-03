@@ -9,5 +9,12 @@ cd CancerPrediction_Model
 
 ## Run
 ```python
+# Running directly on local
+python main.py
+
+# Running through Docker
+docker build -t cancer_prediction .
+docker run -it --name cancerprediction_model -v ~/CancerPrediction_Model:/workspace cancer_prediction /bin/bash
+cd Model
 python main.py
 ```
