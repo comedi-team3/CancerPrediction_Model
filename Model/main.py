@@ -1,10 +1,38 @@
+import json
 import time
 import pickle
 import torch
 import numpy as np
 import torch.nn as nn
 from model import OneDimCNN
+from collections import Counter
 from matrix import batch_list, acc, epoch_time
+
+def infer(num):
+    model = OneDimCNN()
+    model.load_state_dict(torch.load('./output_dir/1DCNN_0803_no_lr_2.pt'))
+
+    model.eval()
+    
+    with open(f'./test_inputs/test_{num}_x.txt') as f:
+        x = np.loadtxt(f)
+
+    with open(f'./test_inputs/test_{num}_y.txt') as f:
+        y = np.loadtxt(f)
+
+    x = torch.from_numpy(x)
+    x = x.unsqueeze(0)
+    x = x.reshape(x.shape[0], 1, 100, 71)
+    x = x.float()
+
+    pred = model(x)
+
+    y_hat = torch.max(pred, 1)[1]
+    y = np.argmax(y, -1)
+
+    print(pred, y_hat, y)
+
+    return
 
 def train(x, y, batch_size, model):
     x_batches = batch_list(x, batch_size)
@@ -15,7 +43,7 @@ def train(x, y, batch_size, model):
 
     for step, data in enumerate(zip(x_batches, y_batches)):
         inputs, labels = np.array(data[0]), torch.tensor(data[1])
-
+        
         inputs = inputs.reshape(inputs.shape[0], 1, 100, 71)
         inputs = torch.from_numpy(inputs).float() #torch.Size([128, 1, 100, 71])
 
@@ -91,6 +119,11 @@ def test(x, y, batch_size, model):
 
 if __name__=="__main__":
 
+    # for i in range(0, 100, 2):
+    #     infer(i)
+
+    # exit()
+    
     second = open('./data/TCGA_new_pre_second.pckl', 'rb')
     [dropped_genes, dropped_genes_name, dropped_ens_id, sample_id, cancer_type, cancer_label] = pickle.load(second)
     second.close()
@@ -111,12 +144,13 @@ if __name__=="__main__":
     X_types = np.concatenate((cancer_names, normal_names))
 
     X_final = np.concatenate((X_cancer, np.zeros((len(X_cancer), 9))), axis=1)
+
     X_final = np.reshape(X_final, (-1, 71, 100))
 
-    # one hot encoding
-    classes = list(set(X_types))
-    X_types = [classes.index(each) for each in X_types]
-    X_types = np.eye(34)[X_types]
+    ## one hot encoding
+    # classes = list(set(X_types))
+    # X_types = [classes.index(each) for each in X_types]
+    # X_types = np.eye(34)[X_types]
 
     train_size = int(0.6 * len(X_types)) #6631
     val_size = int((len(X_types) - train_size)/2) #2211
@@ -128,12 +162,24 @@ if __name__=="__main__":
     x_val, y_val = list(zip(*val_set))[0], list(zip(*val_set))[1]
     x_test, y_test = list(zip(*test_set))[0], list(zip(*test_set))[1]
 
+   
+    '''
+    classes_json = json.dumps({'classes': classes})
+    with open('classes_0803_2.json', 'w', encoding='utf-8') as f:
+        json.dump(classes_json, f)
+    
+    for i in range(0, 100, 2):
+        with open(f'./test_inputs/test_{i}_x.txt', 'w', encoding='utf-8') as f:
+            np.savetxt(f, x_test[i])
+        with open(f'./test_inputs/test_{i}_y.txt', 'w', encoding='utf-8') as f:
+            np.savetxt(f, y_test[i])
+
+    exit()
+    '''
+
     batch_size = 128
     epoch = 100
     patience = 5
-
-    rows, cols = len(x_train[0][0]), len(x_train[0])
-    num_classes = len(classes)
 
     model = OneDimCNN()
     criterion = nn.CrossEntropyLoss()
@@ -141,7 +187,7 @@ if __name__=="__main__":
 
     early_stop_check = 0
     best_valid_loss = float('inf')
-    sorted_path = f'./output_dir/1DCNN_0728_no_lr_4.pt'
+    sorted_path = f'./output_dir/1DCNN_0806_no_lr_3.pt'
 
     for epoch in range(epoch):
         start_time = time.time()

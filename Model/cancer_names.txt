@@ -1,0 +1,34 @@
+Breast invasive carcinoma
+Normal Samples
+Uterine Corpus Endometrial Carcinoma
+Kidney renal clear cell carcinoma
+Lung adenocarcinoma
+Brain Lower Grade Glioma
+Thyroid carcinoma
+Head and Neck squamous cell carcinoma
+Lung squamous cell carcinoma
+Prostate adenocarcinoma
+Colon adenocarcinoma
+Skin Cutaneous Melanoma
+Bladder Urothelial Carcinoma
+Ovarian serous cystadenocarcinoma
+Liver hepatocellular carcinoma
+Stomach adenocarcinoma
+Cervical squamous cell carcinoma and endocervical adenocarcinoma
+Kidney renal papillary cell carcinoma
+Sarcoma
+Pheochromocytoma and Paraganglioma
+Pancreatic adenocarcinoma
+Glioblastoma multiforme
+Rectum adenocarcinoma
+Esophageal carcinoma
+Acute Myeloid Leukemia
+Testicular Germ Cell Tumors
+Thymoma
+Mesothelioma
+Uveal Melanoma
+Adrenocortical carcinoma
+Kidney Chromophobe
+Uterine Carcinosarcoma
+Lymphoid Neoplasm Diffuse Large B-cell Lymphoma
+Cholangiocarcinoma
